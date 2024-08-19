@@ -37,6 +37,6 @@
     <arg name="orientation_topic" value="sensors/nav/pose"/>
   </include>
 
-  <node pkg="mesobot_behavior" type="mesobot_behavior_node.py" name="mesobot_behavior" ns="$(arg host_namespace)"/>
+<!--  <node pkg="mesobot_behavior" type="mesobot_behavior_node.py" name="mesobot_behavior" ns="$(arg host_namespace)"/> -->
 
 </launch>
