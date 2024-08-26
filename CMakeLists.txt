@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(mesobot_project11)
 
 find_package(catkin REQUIRED COMPONENTS
+geographic_msgs
 roscpp
 roslint
 rospy
