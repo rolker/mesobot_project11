@@ -51,8 +51,11 @@ void MesobotPlugin::initPlugin(qt_gui_cpp::PluginContext& context)
 void MesobotPlugin::shutdownPlugin()
 {
   raw_subscriber_.shutdown();
+  send_raw_subscriber_.shutdown();
   pose_subscriber_.shutdown();
   raw_publisher_.shutdown();
+  remote_command_subscriber_.shutdown();
+  wait_time_subscriber_.shutdown();
 }
 
 void MesobotPlugin::saveSettings(qt_gui_cpp::Settings& plugin_settings, qt_gui_cpp::Settings& instance_settings) const
@@ -101,8 +104,12 @@ void MesobotPlugin::on_commandTopicLineEdit_editingFinished()
   if(topic != command_topic_)
   {
     raw_publisher_.shutdown();
+    send_raw_subscriber_.shutdown();
     if(!topic.empty())
+    {
       raw_publisher_ = getNodeHandle().advertise<std_msgs::String>(topic, 10);
+      send_raw_subscriber_ = getNodeHandle().subscribe(topic, 10, &MesobotPlugin::sendByOthersCallback, this);
+    }
   }
   command_topic_ = topic;
 }
@@ -171,6 +178,23 @@ void MesobotPlugin::feedbackCallback(const std_msgs::String::ConstPtr& message)
   feedback_to_add_.push_back(html);
   QMetaObject::invokeMethod(this, &MesobotPlugin::appendFeedback);
 }
+
+void MesobotPlugin::sendByOthersCallback(const std_msgs::String::ConstPtr& message)
+{
+  std::lock_guard<std::mutex> lock(feedback_to_add_lock_);
+  std::string html = "<span style=\"color:maroon;\">" + QDateTime::currentDateTimeUtc().toString("yyyy-MM-dd HH:mm:ss").toStdString();
+  auto data = message->data;
+  auto less_than = data.find('<');
+  while (less_than != std::string::npos)
+  {
+    data = data.substr(0,less_than)+data.substr(less_than+1);
+    less_than = data.find('<');
+  }
+  html += " </span>" + data;
+  feedback_to_add_.push_back(html);
+  QMetaObject::invokeMethod(this, &MesobotPlugin::appendFeedback);
+}
+
 
 void MesobotPlugin::appendFeedback()
 {
