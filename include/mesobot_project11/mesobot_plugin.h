@@ -49,6 +49,7 @@ private slots:
 
 private:
   void feedbackCallback(const std_msgs::String::ConstPtr & message);
+  void sendByOthersCallback(const std_msgs::String::ConstPtr & message);
   void poseCallback(const geographic_msgs::GeoPoseStamped::ConstPtr & message);
   void remoteCommandCallback(const std_msgs::String::ConstPtr & message);
   void waitTimeCallback(const std_msgs::Int32::ConstPtr & message);
@@ -69,6 +70,7 @@ private:
   std::string pose_topic_;
   ros::Publisher raw_publisher_;
   ros::Subscriber raw_subscriber_;
+  ros::Subscriber send_raw_subscriber_;
   ros::Subscriber pose_subscriber_;
   ros::Subscriber remote_command_subscriber_;
   ros::Subscriber wait_time_subscriber_;
