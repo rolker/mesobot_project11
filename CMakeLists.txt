@@ -23,9 +23,6 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
 roslint_cpp()
 
-install(DIRECTORY launch/ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
-install(DIRECTORY config/ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config)
-
 set(rqt_mesobot_SRCS
   src/mesobot_plugin.cpp
 )
@@ -83,6 +80,8 @@ target_link_libraries(${PROJECT_NAME}
 find_package(class_loader)
 class_loader_hide_library_symbols(${PROJECT_NAME})
 
+install(DIRECTORY launch/ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch)
+install(DIRECTORY config/ DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config)
 
 install(FILES
   plugin.xml
@@ -94,10 +93,6 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
 )
-
-# catkin_install_python(PROGRAMS scripts/rqt_sonardyne_ranger
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
 
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
